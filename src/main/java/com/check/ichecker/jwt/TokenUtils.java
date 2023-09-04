@@ -1,13 +1,18 @@
 package com.check.ichecker.jwt;
 
 import com.check.ichecker.user.domain.Users;
+import com.check.ichecker.user.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,17 +21,25 @@ import java.util.Map;
 @Service
 public class TokenUtils {
 
-    private final String SECRET_KEY = "secretKey";
+    @Value("${jwt.secret}")
+    private String secretKey;
     private final String REFRESH_KEY = "refreshKey";
     private final String DATA_KEY = "userId";
 
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
+
+
     public String generateJwtToken(Users users) {
         return Jwts.builder()
-                .setSubject(users.getUserId())
-                .setHeader(createHeader())
+                .setHeaderParam("typ", "JWT")
                 .setClaims(createClaims(users))
+                .setSubject(users.getUserId())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(createExpireDate(1000 * 60 * 5))
-                .signWith(SignatureAlgorithm.HS256, createSigningKey(SECRET_KEY))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
@@ -39,8 +52,6 @@ public class TokenUtils {
                 .signWith(SignatureAlgorithm.HS256, createSigningKey(REFRESH_KEY))
                 .compact();
     }
-
-
 
     public boolean isValidToken(String token) {
         System.out.println("isValidToken is : " +token);
@@ -60,6 +71,7 @@ public class TokenUtils {
             return false;
         }
     }
+
     public boolean isValidRefreshToken(String token) {
         try {
             Claims accessClaims = getClaimsToken(token);
@@ -107,7 +119,7 @@ public class TokenUtils {
 
     private Claims getClaimsFormToken(String token) {
         return Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                 .parseClaimsJws(token)
                 .getBody();
     }

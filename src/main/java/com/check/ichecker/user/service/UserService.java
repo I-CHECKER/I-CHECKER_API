@@ -58,6 +58,7 @@ public class UserService {
 
     @Transactional
     public TokenResponse signIn(UserRequest userRequest) throws Exception {
+
         Users usersEntity =
                 usersRepository
                         .findByUserId(userRequest.getUserId())
@@ -80,11 +81,12 @@ public class UserService {
                     .ACCESS_TOKEN(accessToken)
                     .REFRESH_TOKEN(authEntity.getRefreshToken())
                     .build();
-        } else {
-            accessToken = tokenUtils.generateJwtToken(authEntity.getUsers());
-            refreshToken = tokenUtils.saveRefreshToken(usersEntity);
-            authEntity.refreshUpdate(refreshToken);
         }
+
+        accessToken = tokenUtils.generateJwtToken(authEntity.getUsers());
+        refreshToken = tokenUtils.saveRefreshToken(usersEntity);
+        authEntity.refreshUpdate(refreshToken);
+
 
         return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
     }
