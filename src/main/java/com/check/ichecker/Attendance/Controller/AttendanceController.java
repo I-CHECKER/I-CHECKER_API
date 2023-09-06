@@ -2,7 +2,6 @@ package com.check.ichecker.Attendance.Controller;
 
 import com.check.ichecker.Attendance.DTO.AttendanceDTO;
 import com.check.ichecker.Attendance.DTO.AttendanceResponseDTO;
-import com.check.ichecker.Attendance.Domain.Attendance;
 import com.check.ichecker.Attendance.Service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/attendance")
+@CrossOrigin("http://localhost:3000")
 public class AttendanceController {
 
     @Autowired
