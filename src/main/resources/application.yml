@@ -17,6 +17,3 @@ spring:
           type:
             descriptor:
               sql: trace
-
-server:
-  port: 8090
