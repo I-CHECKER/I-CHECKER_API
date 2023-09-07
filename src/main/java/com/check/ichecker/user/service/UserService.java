@@ -11,6 +11,9 @@ import com.check.ichecker.user.dto.TokenResponse;
 import com.check.ichecker.user.dto.UserSignInRequest;
 import com.check.ichecker.user.dto.UserSignUpRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ public class UserService {
     private final TokenUtils tokenUtils;
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
 
     public Optional<Users> findByUserId(String userId) {
 
@@ -57,7 +62,25 @@ public class UserService {
         return true;
     }
 
-    @Transactional
+    public TokenResponse login(UserSignInRequest request) throws Exception{
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUserId(), request.getPassword()));
+
+        String userId = request.getUserId();
+
+        return createJwtToken(authentication, userId);
+    }
+
+    private TokenResponse createJwtToken(Authentication authentication, String userId) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        String accessToken = tokenUtils.generateToken(principal);
+
+
+        return new TokenResponse(accessToken);
+    }
+
+    /*@Transactional
     public TokenResponse signIn(UserSignInRequest userSignInRequest) throws Exception {
 
         Users usersEntity =
@@ -90,7 +113,7 @@ public class UserService {
 
 
         return TokenResponse.builder().ACCESS_TOKEN(accessToken).REFRESH_TOKEN(refreshToken).build();
-    }
+    }*/
 
     public List<Users> findUsers() {
         return usersRepository.findAll();

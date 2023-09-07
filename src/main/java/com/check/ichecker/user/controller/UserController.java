@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping("/signIn")
     public ResponseEntity<TokenResponse> signIn(@RequestBody UserSignInRequest userSignUpRequest) throws Exception {
 
-        return ResponseEntity.ok().body(userService.signIn(userSignUpRequest));
+        return ResponseEntity.ok().body(userService.login(userSignUpRequest));
     }
 
     @GetMapping("/info")

@@ -12,11 +12,15 @@ import java.util.List;
 @Entity
 @Table(name = "attendance")
 public class Attendance {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(name = "user_id")
     private String userid;
+
     private String date;
+
     private String time;
 }
