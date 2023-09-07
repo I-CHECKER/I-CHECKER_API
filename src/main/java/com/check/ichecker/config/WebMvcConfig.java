@@ -1,5 +1,4 @@
-package com.check.ichecker.config;
-
+package com.check.ichecker.Config;
 
 import com.check.ichecker.jwt.JwtTokenInterceptor;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
-                .allowedOrigins("https://web-template-3prof2llkxuyz4l.sel4.cloudtype.app")
-                .allowedOrigins("https://localhost:3000")
+                .allowedOrigins("https://web-template-3prof2llkxuyz4l.sel4.cloudtype.app", "https://localhost:3000")
                 .allowedMethods("GET")
                 .allowedMethods("POST");
     }
