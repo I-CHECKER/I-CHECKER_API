@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://svc.sel5.cloudtype.app:30211/icheck
+    username: 'root'
+    password: '1234'
+
+
+
+# JWT
+jwt:
+  secret: YOUR_SECRET_KEY
+  access-expired: 86400
+
