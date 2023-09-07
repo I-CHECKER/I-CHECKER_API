@@ -23,12 +23,12 @@ public class AttendanceService {
         this.userRepository = userRepository;
     }
 
-    public void addCheck(AttendanceDTO attendanceDTO){
+    public void addCheck(String userid, AttendanceDTO attendanceDTO){
         Attendance attendance = new Attendance();
 
         attendance.setDate(attendanceDTO.getDate());
         attendance.setTime(attendanceDTO.getTime());
-        attendance.setUserid(attendanceDTO.getUserid());
+        attendance.setUserid(userid);
 
         attendanceRepository.save(attendance);
     }

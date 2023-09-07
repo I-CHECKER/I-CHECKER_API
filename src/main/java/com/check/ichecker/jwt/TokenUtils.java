@@ -102,7 +102,7 @@ public class TokenUtils {
 
         String jwtToken = token.substring(7);
 
-        if(validateToken(jwtToken)){
+        if(!validateToken(jwtToken)){
             return "Invalid token";
         }
 

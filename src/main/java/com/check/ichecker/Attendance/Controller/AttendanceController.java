@@ -35,11 +35,11 @@ public class AttendanceController {
 
         String userId = tokenUtils.getUserIdFromToken(request);
 
-        if(userId == null){
+        if(userId.equals("Invalid token")){
             return ResponseEntity.badRequest().body("Invalid token");
         }
 
-        attendanceService.addCheck(attendanceDTO);
+        attendanceService.addCheck(userId, attendanceDTO);
 
         return ResponseEntity.ok().body("success");
     }
