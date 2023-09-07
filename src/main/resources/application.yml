@@ -6,9 +6,9 @@ spring:
     password: '1234'
 
 
-
 # JWT
 jwt:
   secret: YOUR_SECRET_KEY
   access-expired: 86400
+
 
