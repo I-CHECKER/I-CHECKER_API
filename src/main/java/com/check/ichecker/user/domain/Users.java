@@ -1,15 +1,15 @@
 package com.check.ichecker.user.domain;
 
 import com.check.ichecker.user.Model.Role;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@AllArgsConstructor
 @Entity
+@Builder
 public class Users {
 
 
@@ -31,13 +31,11 @@ public class Users {
     @Transient
     private boolean approved = false;
 
-    @Builder
-    public Users(String userId, String password, String grade, Role role, String name) {
-        this.userId = userId;
-        this.grade = grade;
-        this.password = password;
-        this.role = role;
-        this.name = name;
+    public Users() {
+        this.name = "";
+        this.userId = "";
+        this.password = "";
+        this.grade = "";
     }
 
     public boolean isApproved() {
