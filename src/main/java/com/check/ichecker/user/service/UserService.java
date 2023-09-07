@@ -8,7 +8,8 @@ import com.check.ichecker.user.domain.AuthRepository;
 import com.check.ichecker.user.domain.Users;
 import com.check.ichecker.user.domain.UsersRepository;
 import com.check.ichecker.user.dto.TokenResponse;
-import com.check.ichecker.user.dto.UserRequest;
+import com.check.ichecker.user.dto.UserSignInRequest;
+import com.check.ichecker.user.dto.UserSignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,9 @@ public class UserService {
     }
 
     @Transactional
-    public boolean signUp(UserRequest userRequest) {
+    public boolean signUp(UserSignUpRequest userSignUpRequest) {
 
-        boolean existUser = usersRepository.existsByUserId(userRequest.getUserId());
+        boolean existUser = usersRepository.existsByUserId(userSignUpRequest.getUserId());
 
         if(existUser)
             return false;
@@ -41,11 +42,11 @@ public class UserService {
         Users usersEntity =
                 usersRepository.save(
                         Users.builder()
-                                .password(passwordEncoder.encode(userRequest.getPassword()))
-                                .grade(userRequest.getGrade())
-                                .name(userRequest.getName())
+                                .password(passwordEncoder.encode(userSignUpRequest.getPassword()))
+                                .grade(userSignUpRequest.getGrade())
+                                .name(userSignUpRequest.getName())
                                 .role(Role.USER)
-                                .userId(userRequest.getUserId())
+                                .userId(userSignUpRequest.getUserId())
                                 .build());
 
         String refreshToken = tokenUtils.saveRefreshToken(usersEntity);
@@ -57,18 +58,18 @@ public class UserService {
     }
 
     @Transactional
-    public TokenResponse signIn(UserRequest userRequest) throws Exception {
+    public TokenResponse signIn(UserSignInRequest userSignInRequest) throws Exception {
 
         Users usersEntity =
                 usersRepository
-                        .findByUserId(userRequest.getUserId())
+                        .findByUserId(userSignInRequest.getUserId())
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Auth authEntity =
                 authRepository
                         .findByUsersId(usersEntity.getId())
                         .orElseThrow(() -> new IllegalArgumentException("Token 이 존재하지 않습니다."));
 
-        if (!passwordEncoder.matches(userRequest.getPassword(), usersEntity.getPassword())) {
+        if (!passwordEncoder.matches(userSignInRequest.getPassword(), usersEntity.getPassword())) {
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
 
