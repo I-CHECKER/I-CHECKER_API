@@ -20,8 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
-                .allowedOrigins("https://web-template-3prof2llkxuyz4l.sel4.cloudtype.app", "https://localhost:3000")
-                .allowedMethods("GET")
-                .allowedMethods("POST");
+                .allowedOrigins("*")
+                .allowedMethods("GET","POST");
     }
 }
